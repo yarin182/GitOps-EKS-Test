@@ -7,14 +7,16 @@ spec:
   project: default
   source:
     repoURL: https://istio-release.storage.googleapis.com/charts
-    chart: gateway
+    chart: istio-ingressgateway
     targetRevision: 1.21.1
     helm:
-      releaseName: istio-ingress
+      releaseName: istio-ingressgateway
       values: |
         image:
           repository: docker.io/istio/proxyv2
-          tag: 1.21.1
+          tag: "1.21.1"
+        service:
+          type: LoadBalancer
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-ingress
