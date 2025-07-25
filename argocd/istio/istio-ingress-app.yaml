@@ -25,12 +25,13 @@ spec:
             targetPort: 8443
         podAnnotations:
           sidecar.istio.io/inject: "false"
-        image:
-          repository: docker.io/istio/proxyv2
-          tag: "1.26.2"
         labels:
           app: istio-ingressgateway
           istio: ingressgateway
+          sidecar.istio.io/inject: "false"
+        image:
+          repository: docker.io/istio/proxyv2
+          tag: "1.26.2"
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-ingress
