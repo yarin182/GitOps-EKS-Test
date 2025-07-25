@@ -11,8 +11,6 @@ spec:
     targetRevision: 1.21.1
     helm:
       releaseName: istio-ingress
-    helm:
-      releaseName: istio-ingress
       values: |
         image:
           repository: docker.io/istio/proxyv2
@@ -23,4 +21,4 @@ spec:
   syncPolicy:
     automated:
       prune: true
-      selfHeal: true 
+      selfHeal: true
