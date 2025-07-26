@@ -8,11 +8,21 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/yarin182/ArgoCD-EKS-Test.git
-    targetRevision: HEAD
-    path: argocd/istio
-    directory:
-      include: istio-ingress-manual.yaml
+    repoURL: https://istio-release.storage.googleapis.com/charts
+    chart: gateway
+    targetRevision: 1.21.1
+    helm:
+      releaseName: istio-ingressgateway
+      values: |
+        service:
+          type: ClusterIP
+          ports:
+          - name: http2
+            port: 80
+            targetPort: 8080
+          - name: https
+            port: 443
+            targetPort: 8443
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-ingress
