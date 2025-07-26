@@ -3,6 +3,8 @@ kind: Gateway
 metadata:
   name: prometheus-gateway
   namespace: monitor
+  labels:
+    app: prometheus-gateway
 spec:
   selector:
     istio: ingressgateway
@@ -19,15 +21,19 @@ kind: VirtualService
 metadata:
   name: prometheus
   namespace: monitor
+  labels:
+    app: prometheus
 spec:
   hosts:
     - "*"
   gateways:
-    - prometheus-gateway
+    - monitor/prometheus-gateway
   http:
     - match:
         - uri:
-            prefix: /
+            prefix: /prometheus
+      rewrite:
+        uri: /
       route:
         - destination:
             host: prometheus-kube-prometheus-prometheus.monitor.svc.cluster.local
