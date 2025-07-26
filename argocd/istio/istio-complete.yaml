@@ -1,0 +1,140 @@
+# Istio Base Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-system
+  labels:
+    istio-injection: disabled
+---
+# Istio Ingress Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-ingress
+  labels:
+    istio-injection: disabled
+---
+# Istio Ingress Gateway Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: istio-ingressgateway
+  namespace: istio-ingress
+  labels:
+    app: istio-ingressgateway
+    istio: ingressgateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: istio-ingressgateway
+      istio: ingressgateway
+  template:
+    metadata:
+      labels:
+        app: istio-ingressgateway
+        istio: ingressgateway
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      containers:
+      - name: istio-proxy
+        image: istio/proxyv2:1.26.2
+        ports:
+        - containerPort: 8080
+        - containerPort: 8443
+        - containerPort: 15021
+        env:
+        - name: ISTIO_META_REQUESTED_NETWORK_VIEW
+          value: "network1"
+        - name: ISTIO_META_WORKLOAD_NAME
+          value: "istio-ingressgateway"
+        - name: ISTIO_META_OWNER
+          value: "kubernetes://apis/apps/v1/namespaces/istio-ingress/deployments/istio-ingressgateway"
+---
+# Istio Ingress Gateway Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: istio-ingressgateway
+  namespace: istio-ingress
+  labels:
+    app: istio-ingressgateway
+    istio: ingressgateway
+spec:
+  selector:
+    app: istio-ingressgateway
+    istio: ingressgateway
+  ports:
+  - name: http2
+    port: 80
+    targetPort: 8080
+  - name: https
+    port: 443
+    targetPort: 8443
+  - name: health
+    port: 15021
+    targetPort: 15021
+---
+# Istio Gateway
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: main-gateway
+  namespace: istio-ingress
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+# ArgoCD Virtual Service
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: argocd-vs
+  namespace: argocd
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - istio-ingress/main-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /argocd
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: argocd-server.argocd.svc.cluster.local
+        port:
+          number: 80
+---
+# Prometheus Virtual Service
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: prometheus-vs
+  namespace: monitor
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - istio-ingress/main-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /prometheus
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: prometheus-kube-prometheus-prometheus.monitor.svc.cluster.local
+        port:
+          number: 9090 
