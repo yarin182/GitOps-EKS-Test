@@ -56,14 +56,8 @@ metadata:
   labels:
     app: istio-ingressgateway
     istio: ingressgateway
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-type: alb
-    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-    service.beta.kubernetes.io/aws-load-balancer-name: istio-ingressgateway-public
-    service.beta.kubernetes.io/aws-load-balancer-target-type: ip
-    service.beta.kubernetes.io/aws-load-balancer-attributes: idle_timeout.timeout_seconds=60
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - name: http2
     port: 80
