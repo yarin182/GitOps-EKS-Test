@@ -35,6 +35,8 @@ spec:
         autoscaleMax: 5
         env:
           ISTIO_META_REQUESTED_NETWORK_VIEW: network1
+        podAnnotations:
+          sidecar.istio.io/inject: "false"
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-ingress
