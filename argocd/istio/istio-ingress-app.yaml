@@ -35,9 +35,6 @@ spec:
         autoscaleMax: 5
         env:
           ISTIO_META_REQUESTED_NETWORK_VIEW: network1
-        image:
-          repository: istio/proxyv2
-          tag: "1.26.2"
         podAnnotations:
           sidecar.istio.io/inject: "true"
   destination:
