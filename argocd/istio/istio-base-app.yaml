@@ -3,6 +3,31 @@ kind: Application
 metadata:
   name: istio-base
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/yarin182/ArgoCD-EKS-Test.git
+    targetRevision: HEAD
+    path: argocd/istio
+    directory:
+      include: istio-namespace.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-base-helm
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   project: default
   source:
@@ -15,9 +40,9 @@ spec:
         global:
           istioNamespace: istio-system
         defaultNamespace:
-          create: true
+          create: false
         namespace:
-          create: true
+          create: false
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system
