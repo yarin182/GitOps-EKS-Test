@@ -23,6 +23,18 @@ spec:
           - name: https
             port: 443
             targetPort: 8443
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 2000m
+            memory: 1024Mi
+        autoscaleEnabled: true
+        autoscaleMin: 1
+        autoscaleMax: 5
+        env:
+          ISTIO_META_REQUESTED_NETWORK_VIEW: network1
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-ingress
@@ -30,3 +42,107 @@ spec:
     automated:
       prune: true
       selfHeal: true
+---
+# Main Gateway for all traffic
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: main-gateway
+  namespace: istio-ingress
+  labels:
+    app: main-gateway
+    istio: ingressgateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*"
+---
+# ArgoCD Virtual Service
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: argocd-vs
+  namespace: argocd
+  labels:
+    app: argocd
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - istio-ingress/main-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /argocd
+      rewrite:
+        uri: /
+      route:
+        - destination:
+            host: argocd-server.argocd.svc.cluster.local
+            port:
+              number: 80
+      corsPolicy:
+        allowOrigins:
+          - exact: "*"
+        allowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+        allowHeaders:
+          - "*"
+---
+# Prometheus Virtual Service
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: prometheus-vs
+  namespace: monitor
+  labels:
+    app: prometheus
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - istio-ingress/main-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /prometheus
+      rewrite:
+        uri: /
+      route:
+        - destination:
+            host: prometheus-kube-prometheus-prometheus.monitor.svc.cluster.local
+            port:
+              number: 9090
+---
+# Health check endpoint for ALB
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: health-check-vs
+  namespace: istio-ingress
+  labels:
+    app: health-check
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - istio-ingress/main-gateway
+  http:
+    - match:
+        - uri:
+            exact: /healthz/ready
+      route:
+        - destination:
+            host: istio-ingressgateway.istio-ingress.svc.cluster.local
+            port:
+              number: 15021
