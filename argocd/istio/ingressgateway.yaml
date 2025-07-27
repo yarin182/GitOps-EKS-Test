@@ -31,6 +31,8 @@ spec:
         - istio-ingressgateway
         - --trust-domain=cluster.local
         - --proxyLogLevel=warning
+        - --controlPlaneAuthPolicy
+        - NONE
         ports:
         - containerPort: 8080
         - containerPort: 8443
