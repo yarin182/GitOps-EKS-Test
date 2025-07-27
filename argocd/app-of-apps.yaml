@@ -8,9 +8,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/yarin182/GitOps-EKS-Test.git'
-    targetRevision: main
-    path: argocd/apps/istio
+    repoURL: 'https://istio-release.storage.googleapis.com/charts'
+    chart: base
+    targetRevision: 1.26.2
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: istio-system
@@ -31,9 +31,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/yarin182/GitOps-EKS-Test.git'
-    targetRevision: main
-    path: argocd/apps/istio
+    repoURL: 'https://istio-release.storage.googleapis.com/charts'
+    chart: istiod
+    targetRevision: 1.26.2
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: istio-system
@@ -54,9 +54,16 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/yarin182/GitOps-EKS-Test.git'
-    targetRevision: main
-    path: argocd/apps/istio
+    repoURL: 'https://istio-release.storage.googleapis.com/charts'
+    chart: gateway
+    targetRevision: 1.26.2
+    helm:
+      values: |
+        name: istio-ingressgateway
+        labels:
+          istio: ingressgateway
+        service:
+          type: LoadBalancer
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: istio-ingress
