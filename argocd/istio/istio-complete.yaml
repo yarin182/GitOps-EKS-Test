@@ -41,12 +41,14 @@ spec:
         - /usr/local/bin/pilot-agent
         args:
         - proxy
-        - router
         - --domain
         - $(POD_NAMESPACE).svc.cluster.local
         - --proxyLogLevel=warning
         - --proxyComponentLogLevel=misc:error
         - --log_output_level=default:info
+        - --serviceCluster
+        - istio-ingressgateway
+        - --trust-domain=cluster.local
         ports:
         - containerPort: 8080
         - containerPort: 8443
