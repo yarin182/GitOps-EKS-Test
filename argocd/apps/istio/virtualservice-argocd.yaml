@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: argocd-vs
+  namespace: argocd
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - argocd-gateway
+  http:
+    - match:
+        - uri:
+            prefix: "/argocd"
+      rewrite:
+        uri: "/"   # This removes /argocd so Argo CD works normally
+      route:
+        - destination:
+            host: argocd-server.argocd.svc.cluster.local
+            port:
+              number: 80
