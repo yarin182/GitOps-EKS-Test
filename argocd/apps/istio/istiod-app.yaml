@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: 'https://istio-release.storage.googleapis.com/charts'
     chart: istiod
-    targetRevision: 1.23.0
+    targetRevision: 1.26.2
     helm:
       values: |
         global:
@@ -25,4 +25,3 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
-
