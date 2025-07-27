@@ -35,25 +35,4 @@ spec:
         host: argocd-server.argocd.svc.cluster.local
         port:
           number: 80
----
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: prometheus-vs
-  namespace: monitor
-spec:
-  hosts:
-  - "*"
-  gateways:
-  - istio-ingress/main-gateway
-  http:
-  - match:
-    - uri:
-        prefix: /prometheus
-    rewrite:
-      uri: /
-    route:
-    - destination:
-        host: prometheus.monitor.svc.cluster.local
-        port:
-          number: 9090 
+ 
