@@ -1,17 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: platform
+  name: istio-base
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/yarin182/GitOps-EKS-Test.git'
-    targetRevision: main
-    path: argocd/apps
+    repoURL: 'https://istio-release.storage.googleapis.com/charts'
+    chart: base
+    targetRevision: 1.26.2
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: argocd
+    namespace: istio-system
   syncPolicy:
     automated:
       prune: true
