@@ -37,6 +37,16 @@ spec:
       containers:
       - name: istio-proxy
         image: istio/proxyv2:1.26.2
+        command:
+        - /usr/local/bin/pilot-agent
+        args:
+        - proxy
+        - router
+        - --domain
+        - $(POD_NAMESPACE).svc.cluster.local
+        - --proxyLogLevel=warning
+        - --proxyComponentLogLevel=misc:error
+        - --log_output_level=default:info
         ports:
         - containerPort: 8080
         - containerPort: 8443
@@ -48,6 +58,14 @@ spec:
           value: "istio-ingressgateway"
         - name: ISTIO_META_OWNER
           value: "kubernetes://apis/apps/v1/namespaces/istio-ingress/deployments/istio-ingressgateway"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
 ---
 apiVersion: v1
 kind: Service
