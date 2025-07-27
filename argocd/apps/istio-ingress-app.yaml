@@ -4,12 +4,8 @@ metadata:
   name: istio-ingress
   namespace: argocd
   annotations:
-    # Ensure Istio ingress runs only after Istiod is ready
     argocd.argoproj.io/sync-wave: "2"
-    # Allow ArgoCD to skip dry-run when Istio CRDs aren't ready yet
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
-    # Enforce wait behavior for readiness
-    argocd.argoproj.io/sync-options: Wait=true
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true, Wait=true
 spec:
   project: default
   source:
@@ -22,9 +18,9 @@ spec:
         labels:
           istio: ingressgateway
         service:
-          type: LoadBalancer
+          type: ClusterIP   # ✅ Changed from LoadBalancer to ClusterIP
         podAnnotations:
-          sidecar.istio.io/inject: "false"  # Prevent sidecar injection
+          sidecar.istio.io/inject: "false"
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: istio-ingress
@@ -34,8 +30,7 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - ApplyOutOfSyncOnly=true   # Avoid unnecessary re-applies
-      - RespectIgnoreDifferences=true
+      - ApplyOutOfSyncOnly=true
     retry:
       limit: 5
       backoff:
