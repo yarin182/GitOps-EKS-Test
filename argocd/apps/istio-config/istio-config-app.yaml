@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/yarin182/GitOps-EKS-Test.git'
+    repoURL: 'https://github.com/<your-org>/ArgoCD-EKS-Test.git'
     targetRevision: main
     path: argocd/apps/istio-config
   destination:
