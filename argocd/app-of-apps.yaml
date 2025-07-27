@@ -9,6 +9,8 @@ spec:
     repoURL: 'https://github.com/yarin182/ArgoCD-EKS-Test.git'
     targetRevision: main
     path: argocd/apps
+    directory:
+      recurse: true
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: argocd

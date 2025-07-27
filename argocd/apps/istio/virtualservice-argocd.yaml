@@ -3,6 +3,8 @@ kind: VirtualService
 metadata:
   name: argocd-vs
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   hosts:
     - "*"
@@ -13,7 +15,7 @@ spec:
         - uri:
             prefix: "/argocd"
       rewrite:
-        uri: "/"   # This removes /argocd so Argo CD works normally
+        uri: "/"
       route:
         - destination:
             host: argocd-server.argocd.svc.cluster.local
