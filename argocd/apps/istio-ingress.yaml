@@ -14,7 +14,12 @@ spec:
         labels:
           istio: ingressgateway
         service:
-          type: ClusterIP
+          type: LoadBalancer
+        image:
+          repository: istio/proxyv2
+          tag: "1.22.0"
+        podAnnotations:
+          sidecar.istio.io/inject: "false"
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-ingress
