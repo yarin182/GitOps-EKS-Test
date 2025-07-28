@@ -18,7 +18,10 @@ spec:
         labels:
           istio: ingressgateway
         service:
-          type: ClusterIP   # ✅ Changed from LoadBalancer to ClusterIP
+          type: ClusterIP
+          ports:
+           - port: 80
+           targetPort: 8080
         podAnnotations:
           sidecar.istio.io/inject: "false"
   destination:
