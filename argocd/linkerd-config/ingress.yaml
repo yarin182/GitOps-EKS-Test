@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: linkerd-ingress
+  labels:
+    linkerd.io/inject: enabled
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: linkerd-ingress
+  namespace: linkerd-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/healthcheck-path: /argocd
+    alb.ingress.kubernetes.io/healthcheck-port: 8080
+    alb.ingress.kubernetes.io/success-codes: 200,302
+    alb.ingress.kubernetes.io/group.name: linkerd
+    alb.ingress.kubernetes.io/group.order: 1
+spec:
+  rules:
+  - host: argocd.local
+    http:
+      paths:
+      - path: /argocd
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              number: 80
+      - path: /argocd/
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              number: 80 
