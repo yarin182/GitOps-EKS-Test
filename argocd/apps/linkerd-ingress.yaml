@@ -1,24 +1,19 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: linkerd-ingress
+  name: argocd-ingress
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    kubernetes.io/ingress.class: alb
 spec:
-  project: default
-  source:
-    repoURL: https://github.com/yarin182/GitOps-EKS-Test.git
-    targetRevision: HEAD
-    path: argocd/linkerd-config
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: linkerd-ingress
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-      - PrunePropagationPolicy=foreground
-      - PruneLast=true 
+  rules:
+    - host: argocd.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  number: 80
