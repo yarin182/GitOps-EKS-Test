@@ -1,3 +1,12 @@
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: traefik
+  annotations:
+    ingressclass.kubernetes.io/is-default-class: "true"
+spec:
+  controller: traefik.io/ingress-controller
+---
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -167,7 +176,7 @@ spec:
   ports:
     - port: 80
       targetPort: 80
-
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -178,7 +187,6 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   ingressClassName: traefik
-spec:
   rules:
   - http:
       paths:
