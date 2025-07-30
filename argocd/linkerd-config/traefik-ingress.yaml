@@ -124,6 +124,18 @@ spec:
   selector:
     app: traefik
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: argocd-server
+  namespace: traefik
+spec:
+  type: ExternalName
+  externalName: argocd-server.argocd.svc.cluster.local
+  ports:
+    - port: 80
+      targetPort: 80
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -132,22 +144,15 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.strip-prefix: "true"
 spec:
   rules:
-  - host: argocd.local
-    http:
+  - http:
       paths:
-        - path: /argocd
+        - path: /
           pathType: Prefix
           backend:
             service:
-              name: argocd-server.argocd.svc.cluster.local
-              port:
-                number: 80
-        - path: /argocd/
-          pathType: Prefix
-          backend:
-            service:
-              name: argocd-server.argocd.svc.cluster.local
+              name: argocd-server
               port:
                 number: 80 
