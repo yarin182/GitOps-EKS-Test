@@ -137,17 +137,17 @@ spec:
   - host: argocd.local
     http:
       paths:
-      - path: /argocd
-        pathType: Prefix
-        backend:
-          service:
-            name: argocd-server
-            port:
-              number: 80
-      - path: /argocd/
-        pathType: Prefix
-        backend:
-          service:
-            name: argocd-server
-            port:
-              number: 80 
+        - path: /argocd
+          pathType: Prefix
+          backend:
+            service:
+              name: argocd-server.argocd.svc.cluster.local
+              port:
+                number: 80
+        - path: /argocd/
+          pathType: Prefix
+          backend:
+            service:
+              name: argocd-server.argocd.svc.cluster.local
+              port:
+                number: 80 
