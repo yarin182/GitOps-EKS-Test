@@ -90,6 +90,7 @@ spec:
             - --entrypoints.websecure.address=:443
             - --providers.kubernetesingress
             - --providers.kubernetesingress.ingressclass=traefik
+            - --providers.kubernetesingress.allowexternalnameservices=true
           ports:
             - name: web
               containerPort: 80
@@ -144,7 +145,8 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.entrypoints: web
-    traefik.ingress.kubernetes.io/router.strip-prefix: "true"
+spec:
+  ingressClassName: traefik
 spec:
   rules:
   - http:
