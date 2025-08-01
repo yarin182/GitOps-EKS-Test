@@ -13,12 +13,11 @@ spec:
     targetRevision: 1.16.11
     helm:
       values: |
-        # Use Kubernetes TLS for identity certificates
+        # Disable identity completely - no certificates needed
         global:
           clusterNetworks: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
         identity:
-          issuer:
-            scheme: kubernetes.io/tls
+          enabled: false
         # Basic proxy configuration
         proxy:
           resources:
