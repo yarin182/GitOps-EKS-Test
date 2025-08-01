@@ -9,13 +9,16 @@ spec:
   project: default
   source:
     repoURL: https://helm.linkerd.io/stable
-    chart: linkerd2
-    targetRevision: 2.11.5
+    chart: linkerd-control-plane
+    targetRevision: 1.16.11
     helm:
       values: |
-        # Minimal configuration for linkerd2 chart
+        # Use linkerd.io/tls for auto-generated certificates
         global:
           clusterNetworks: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+        identity:
+          issuer:
+            scheme: linkerd.io/tls
         # Basic proxy configuration
         proxy:
           resources:
