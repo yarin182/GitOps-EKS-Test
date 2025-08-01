@@ -9,15 +9,13 @@ spec:
   project: default
   source:
     repoURL: https://helm.linkerd.io/stable
-    chart: linkerd-control-plane
-    targetRevision: 1.16.11
+    chart: linkerd2
+    targetRevision: 2.11.5
     helm:
       values: |
-        # Disable identity completely - no certificates needed
+        # Minimal configuration for linkerd2 chart
         global:
           clusterNetworks: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
-        identity:
-          enabled: false
         # Basic proxy configuration
         proxy:
           resources:
