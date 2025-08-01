@@ -13,9 +13,45 @@ spec:
     targetRevision: 2.11.5
     helm:
       values: |
-        # Simple configuration without complex certificate setup
+        # Simple configuration with pre-generated certificates
         global:
           clusterNetworks: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+        identity:
+          issuer:
+            scheme: kubernetes.io/tls
+            tls:
+              crtPEM: |
+                -----BEGIN CERTIFICATE-----
+                MIICBjCCAW8CAQAwDQYJKoZIhvcNAQELBQAwYDELMAkGA1UEBhMCVVMxCzAJBgNV
+                BAgMAkNBMRMwEQYDVQQKDApMaW5rZXJkIElPMRMwEQYDVQQLDApMaW5rZXJkIElP
+                MRMwEQYDVQQDDApMaW5rZXJkIElPMB4XDTI0MDEwMTAwMDAwMFoXDTM0MDEwMTAw
+                MDAwMFowYDELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAkNBMRMwEQYDVQQKDApMaW5r
+                ZXJkIElPMRMwEQYDVQQLDApMaW5rZXJkIElPMRMwEQYDVQQDDApMaW5rZXJkIElP
+                MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC7VJTUt9Us8cKxMzCRF2Rf6+vt
+                E0uW1HCPP7vXtS4qrngDJmkQHmPlB3aCHco6D0PrzskFZTK9RPfTmgtv4CHp6qXQ
+                bQjB0xTvua4FE3W9d9go3LcA7w5CgY5EekOvpFZfXaYprA26C6eIup3hHMtEr1oZF
+                JOkiEihagBpJZSoqgQIDAQABMA0GCSqGSIb3DQEBCwUAA4GBALuj7BvvZnJHzmWt
+                lz4D7GZ9NE+shy2p5e3jBAdZ8LRzNRxP+6tBOlrDYDl7l3F4yAdQw1nVBJm1d2fxs
+                qQ8uOvzJbwX5fqp5ZosRXJjzLdh+HgGsGdkHZUzHpDz6kvpVuoY4NLj0eg+6GDuN
+                7YC6EsX0dCx2zYzJkf4UeXoa
+                -----END CERTIFICATE-----
+              keyPEM: |
+                -----BEGIN PRIVATE KEY-----
+                MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALtUlNS31SzxwrEz
+                MJEXZF/r6+0TS5bUcI8/u9e1LiqueAMmaRAeY+UHdoIdyjoPQ+vOyQVlMr1E99Oa
+                C2/gIenqpdBtCMHTFO+5rgUTdb132CjctwDvDkKBjkR6Q6+kVl9dpimsDboLp4i6
+                neEcy0SvWhkUkySISKFqAGkllKiqBAgMBAAECgYEAhX7MPMoX5AjDSHmwxYmAcM3
+                Qn5cjWPpUlnosjPpKJ0ISlfd1MhT2qfbdfBZt4WpSYjGxcpLjCCJc3Cmm65K6Ace
+                vSWfRw5NDFud6kc4gKN0Cs1qh8jJ8a2WmxJ7Y6BTWMmRfHpLtJmFP2srALirj/NP
+                Yd3XaacvtSJqSNqE+8ECQQDgP7ZKVVzDl9Um3VjubR9PVqDCOZR6l4mBwuI/P1w8
+                B8iDE0UcBmkjtaQ5xGZEGxP1aewre2QJCEqGcVn3QqjXAkEA0QJ8hNtDafLEPZ3X
+                Ag6S5gOSB0JYwvJdyqDuQfD5d2T3fX4WXnL8jPymR6SHTg/zdz1da5swVUemg7cS
+                zxI8TQJBALb3bWx7aKzVOqkQyBgFjTvaFgXMBcwjohmapf2XgYxV0qRcTl7V2+CF
+                k0W2s2e6jqJTbN3+Wrb9AhWHjUcCQQC0+cErDB4nZKzhGfWHWxEP0MVWp6PSpKKK
+                JwLla6/g6j5X7WjQoDQUbCjI1veGxceT6MlAH1I1m4SbWVq4NqrIeXfXAkEAmku4
+                gqpz2NpQJk3V6yz0LIZL6j0ZjqKOJDUojM8bHlXmZDW9MVxS5GjzX6QOQgyK2f1C
+                Ub2Ufne4afYzKg==
+                -----END PRIVATE KEY-----
         # Basic proxy configuration
         proxy:
           resources:
