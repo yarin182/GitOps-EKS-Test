@@ -11,8 +11,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: traefik
-  labels:
-    linkerd.io/inject: enabled
+  labels: {}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -82,8 +81,7 @@ spec:
     metadata:
       labels:
         app: traefik
-      annotations:
-        linkerd.io/inject: enabled
+      annotations: {}
     spec:
       serviceAccountName: traefik-ingress-controller
       containers:
