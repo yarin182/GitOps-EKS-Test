@@ -9,16 +9,17 @@ spec:
   project: default
   source:
     repoURL: https://helm.linkerd.io/stable
-    chart: linkerd2
-    targetRevision: 2.11.5
+    chart: linkerd-control-plane
+    targetRevision: 1.16.11
     helm:
       values: |
-        # Simple configuration without identity/mTLS
+        # Use default certificate generation
         global:
           clusterNetworks: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
-        # Disable identity to avoid certificate issues
+        # Let Linkerd generate its own certificates
         identity:
-          enabled: false
+          issuer:
+            scheme: kubernetes.io/tls
         # Basic proxy configuration
         proxy:
           resources:
