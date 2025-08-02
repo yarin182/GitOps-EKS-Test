@@ -9,8 +9,8 @@ spec:
   project: default
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
-    chart: prometheus
-    targetRevision: 25.8.0
+    chart: kube-prometheus-stack
+    targetRevision: 55.5.0
     helm:
       values: |
         # Prometheus configuration
@@ -26,9 +26,6 @@ spec:
                 memory: 256Mi
             storageSpec:
               emptyDir: {}
-        server:
-          persistentVolume:
-            enabled: false
         alertmanager:
           enabled: false
         grafana:
