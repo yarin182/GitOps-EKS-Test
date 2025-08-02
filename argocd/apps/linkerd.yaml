@@ -19,9 +19,6 @@ spec:
         identity:
           issuer:
             scheme: linkerd.io/tls
-            tls:
-              crtPEM: ""
-              keyPEM: ""
         # Basic proxy configuration
         proxy:
           resources:
