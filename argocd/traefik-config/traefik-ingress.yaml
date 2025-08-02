@@ -153,7 +153,7 @@ data:
           middlewares:
             - argocd-stripprefix
         kiali:
-          rule: "PathPrefix(`/kiali`)"
+          rule: "PathPrefix(`/kiali`) || PathPrefix(`/kiali/`)"
           service: kiali
           entryPoints:
             - web
@@ -168,6 +168,7 @@ data:
           stripPrefix:
             prefixes:
               - "/kiali"
+              - "/kiali/"
       services:
         argocd:
           loadBalancer:
