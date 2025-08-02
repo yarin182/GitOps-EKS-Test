@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kiali
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://kiali.org/helm-charts
+    chart: kiali-server
+    targetRevision: 1.73.0
+    helm:
+      values: |
+        # Kiali configuration
+        auth:
+          strategy: anonymous
+        external_services:
+          istio:
+            root_namespace: istio-system
+          prometheus:
+            url: http://prometheus-server.monitoring.svc.cluster.local:9090
+        server:
+          port: 20001
+          web_root: /kiali
+        deployment:
+          accessible_namespaces:
+            - '**'
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true 
