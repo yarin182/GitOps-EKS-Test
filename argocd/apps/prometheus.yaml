@@ -26,6 +26,7 @@ spec:
                 memory: 256Mi
             storageSpec:
               emptyDir: {}
+            volumeClaimTemplate: null
         alertmanager:
           enabled: false
         grafana:
