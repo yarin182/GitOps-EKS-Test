@@ -157,18 +157,13 @@ data:
           service: kiali
           entryPoints:
             - web
-          middlewares:
-            - kiali-stripprefix
 
       middlewares:
         argocd-stripprefix:
           stripPrefix:
             prefixes:
               - "/argocd"
-        kiali-stripprefix:
-          stripPrefix:
-            prefixes:
-              - "/kiali"
+
 
       services:
         argocd:

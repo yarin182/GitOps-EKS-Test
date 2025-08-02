@@ -24,7 +24,7 @@ spec:
             is_core: false
         server:
           port: 20001
-          web_root: /
+          web_root: /kiali
         deployment:
           accessible_namespaces:
             - '**'
