@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/yarin182/GitOps-EKS-Test.git
     targetRevision: HEAD
-    path: argocd/linkerd-config
+    path: argocd/traefik-config
   destination:
     server: https://kubernetes.default.svc
     namespace: traefik
