@@ -4,9 +4,13 @@ metadata:
   name: kiali-ingress
   namespace: istio-system
   annotations:
-    kubernetes.io/ingress.class: "traefik"
-    traefik.ingress.kubernetes.io/router.entrypoints: "web"
-    traefik.ingress.kubernetes.io/router.middlewares: "istio-system-kiali-stripprefix@kubernetescrd"
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: "internet-facing"
+    alb.ingress.kubernetes.io/target-type: "ip"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/healthcheck-path: "/kiali"
+    alb.ingress.kubernetes.io/healthcheck-port: "20001"
+    alb.ingress.kubernetes.io/success-codes: "200,302"
 spec:
   rules:
   - http:

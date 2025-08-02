@@ -152,18 +152,33 @@ data:
             - web
           middlewares:
             - argocd-stripprefix
+        kiali:
+          rule: "PathPrefix(`/kiali`)"
+          service: kiali
+          entryPoints:
+            - web
+          middlewares:
+            - kiali-stripprefix
 
       middlewares:
         argocd-stripprefix:
           stripPrefix:
             prefixes:
               - "/argocd"
+        kiali-stripprefix:
+          stripPrefix:
+            prefixes:
+              - "/kiali"
 
       services:
         argocd:
           loadBalancer:
             servers:
               - url: "http://argocd-server.argocd.svc.cluster.local:80"
+        kiali:
+          loadBalancer:
+            servers:
+              - url: "http://kiali.istio-system.svc.cluster.local:20001"
 
 ---
 apiVersion: v1
