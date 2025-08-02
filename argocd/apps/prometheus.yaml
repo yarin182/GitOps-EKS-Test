@@ -25,12 +25,7 @@ spec:
                 cpu: 200m
                 memory: 256Mi
             storageSpec:
-              volumeClaimTemplate:
-                spec:
-                  accessModes: ["ReadWriteOnce"]
-                  resources:
-                    requests:
-                      storage: 1Gi
+              emptyDir: {}
         alertmanager:
           enabled: false
         grafana:
