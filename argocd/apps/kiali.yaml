@@ -20,7 +20,7 @@ spec:
           istio:
             root_namespace: istio-system
           prometheus:
-            url: http://prometheus-server.monitoring.svc.cluster.local:9090
+            url: http://prometheus-server.monitor.svc.cluster.local:9090
         server:
           port: 20001
           web_root: /
