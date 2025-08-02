@@ -23,7 +23,7 @@ spec:
             url: http://prometheus-server.monitoring.svc.cluster.local:9090
         server:
           port: 20001
-          web_root: /kiali
+          web_root: /
         deployment:
           accessible_namespaces:
             - '**'
