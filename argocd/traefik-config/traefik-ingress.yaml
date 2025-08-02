@@ -153,17 +153,12 @@ data:
           middlewares:
             - argocd-stripprefix
         kiali:
-          rule: "PathPrefix(`/kiali`) && !PathPrefix(`/kiali/static`) && !PathPrefix(`/kiali/env.js`) && !PathPrefix(`/kiali/manifest.json`) && !PathPrefix(`/kiali/kiali_icon_lightbkg_16px.png`) && !PathPrefix(`/kiali/pficon.woff2`)"
+          rule: "PathPrefix(`/kiali`)"
           service: kiali
           entryPoints:
             - web
           middlewares:
             - kiali-stripprefix
-        kiali-static:
-          rule: "PathPrefix(`/kiali/static`) || PathPrefix(`/kiali/env.js`) || PathPrefix(`/kiali/manifest.json`) || PathPrefix(`/kiali/kiali_icon_lightbkg_16px.png`) || PathPrefix(`/kiali/pficon.woff2`)"
-          service: kiali
-          entryPoints:
-            - web
 
       middlewares:
         argocd-stripprefix:
