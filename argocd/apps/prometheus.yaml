@@ -40,6 +40,8 @@ spec:
         server:
           persistentVolume:
             enabled: false
+          service:
+            port: 9090
   destination:
     server: https://kubernetes.default.svc
     namespace: monitor
