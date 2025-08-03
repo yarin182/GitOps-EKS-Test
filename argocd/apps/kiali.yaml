@@ -25,6 +25,8 @@ spec:
             custom_metrics_url: "http://prometheus-server.monitor.svc.cluster.local:80"
             health_check_url: "http://prometheus-server.monitor.svc.cluster.local:80/api/v1/query?query=up"
             query_timeout_seconds: 300
+          tracing:
+            enabled: false
         server:
           port: 20001
           web_root: /kiali
@@ -38,6 +40,10 @@ spec:
             limits:
               cpu: 200m
               memory: 256Mi
+        # Disable problematic features
+        features:
+          disabled_features:
+            - "registry"
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system
