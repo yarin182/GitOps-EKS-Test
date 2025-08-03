@@ -22,6 +22,9 @@ spec:
           prometheus:
             url: "http://prometheus-server.monitor.svc.cluster.local:80"
             is_core: false
+            custom_metrics_url: "http://prometheus-server.monitor.svc.cluster.local:80"
+            health_check_url: "http://prometheus-server.monitor.svc.cluster.local:80/api/v1/query?query=up"
+            query_timeout_seconds: 300
         server:
           port: 20001
           web_root: /kiali
