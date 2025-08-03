@@ -36,6 +36,10 @@ spec:
           enabled: true
         node-exporter:
           enabled: true
+        # Disable PVC creation
+        server:
+          persistentVolume:
+            enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: monitor
