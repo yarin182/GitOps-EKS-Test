@@ -164,8 +164,6 @@ data:
           service: prometheus
           entryPoints:
             - web
-          middlewares:
-            - prometheus-stripprefix
 
       middlewares:
         argocd-stripprefix:
@@ -176,10 +174,7 @@ data:
           stripPrefix:
             prefixes:
               - "/kiali"
-        prometheus-stripprefix:
-          stripPrefix:
-            prefixes:
-              - "/prometheus"
+
 
 
       services:
