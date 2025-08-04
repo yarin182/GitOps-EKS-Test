@@ -157,29 +157,12 @@ data:
           service: kiali
           entryPoints:
             - web
-        prometheus:
-          rule: "PathPrefix(`/prometheus`)"
-          service: prometheus
-          entryPoints:
-            - web
-          middlewares:
-            - kiali-stripprefix
-        prometheus:
-          rule: "PathPrefix(`/prometheus`)"
-          service: prometheus
-          entryPoints:
-            - web
 
       middlewares:
         argocd-stripprefix:
           stripPrefix:
             prefixes:
               - "/argocd"
-        kiali-stripprefix:
-          stripPrefix:
-            prefixes:
-              - "/kiali"
-
 
 
       services:
@@ -191,14 +174,6 @@ data:
           loadBalancer:
             servers:
               - url: "http://kiali.istio-system.svc.cluster.local:20001"
-        prometheus:
-          loadBalancer:
-            servers:
-              - url: "http://prometheus-server.monitor.svc.cluster.local:80"
-        prometheus:
-          loadBalancer:
-            servers:
-              - url: "http://prometheus-server.monitor.svc.cluster.local:80"
 
 ---
 apiVersion: v1
@@ -209,18 +184,6 @@ metadata:
 spec:
   type: ExternalName
   externalName: argocd-server.argocd.svc.cluster.local
-  ports:
-    - port: 80
-      targetPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: prometheus
-  namespace: traefik
-spec:
-  type: ExternalName
-  externalName: prometheus-server.monitor.svc.cluster.local
   ports:
     - port: 80
       targetPort: 80 
