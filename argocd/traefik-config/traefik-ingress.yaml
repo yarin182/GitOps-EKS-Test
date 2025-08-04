@@ -197,6 +197,8 @@ spec:
                 port:
                   number: 9090
 ---
+
+---
 # Service for ArgoCD
 apiVersion: v1
 kind: Service
