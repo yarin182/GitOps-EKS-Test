@@ -157,12 +157,29 @@ data:
           service: kiali
           entryPoints:
             - web
+          middlewares:
+            - kiali-stripprefix
+        prometheus:
+          rule: "PathPrefix(`/prometheus`)"
+          service: prometheus
+          entryPoints:
+            - web
+          middlewares:
+            - prometheus-stripprefix
 
       middlewares:
         argocd-stripprefix:
           stripPrefix:
             prefixes:
               - "/argocd"
+        kiali-stripprefix:
+          stripPrefix:
+            prefixes:
+              - "/kiali"
+        prometheus-stripprefix:
+          stripPrefix:
+            prefixes:
+              - "/prometheus"
 
 
       services:
@@ -174,6 +191,10 @@ data:
           loadBalancer:
             servers:
               - url: "http://kiali.istio-system.svc.cluster.local:20001"
+        prometheus:
+          loadBalancer:
+            servers:
+              - url: "http://prometheus-server.monitor.svc.cluster.local:80"
 
 ---
 apiVersion: v1
