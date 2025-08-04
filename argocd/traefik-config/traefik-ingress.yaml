@@ -95,9 +95,8 @@ spec:
             - --log.filepath=/var/log/traefik/traefik.log
             - --entrypoints.web.address=:80
             - --entrypoints.websecure.address=:443
-            - --providers.kubernetesingress
-            - --providers.kubernetesingress.ingressclass=traefik
-            - --providers.kubernetesingress.allowexternalnameservices=true
+            - --providers.file.directory=/etc/traefik/dynamic
+            - --providers.file.watch=true
           ports:
             - name: web
               containerPort: 80
@@ -108,9 +107,14 @@ spec:
           volumeMounts:
             - name: traefik-logs
               mountPath: /var/log/traefik
+            - name: traefik-config
+              mountPath: /etc/traefik/dynamic
       volumes:
         - name: traefik-logs
           emptyDir: {}
+        - name: traefik-config
+          configMap:
+            name: traefik-config
 ---
 kind: Service
 apiVersion: v1
@@ -132,75 +136,66 @@ spec:
   selector:
     app: traefik
 ---
-# Ingress for ArgoCD
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: argocd-ingress
+  name: traefik-config
   namespace: traefik
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/router.entrypoints: web
-    traefik.ingress.kubernetes.io/router.stripprefix.prefixes: "/argocd"
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /argocd
-            pathType: Prefix
-            backend:
-              service:
-                name: argocd-server
-                port:
-                  number: 80
----
-# Ingress for Kiali
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: kiali-ingress
-  namespace: traefik
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/router.entrypoints: web
-    traefik.ingress.kubernetes.io/router.stripprefix.prefixes: "/kiali"
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /kiali
-            pathType: Prefix
-            backend:
-              service:
-                name: kiali
-                port:
-                  number: 20001
----
-# Ingress for Prometheus
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: prometheus-ingress
-  namespace: traefik
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/router.entrypoints: web
-    traefik.ingress.kubernetes.io/router.stripprefix.prefixes: "/prometheus"
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /prometheus
-            pathType: Prefix
-            backend:
-              service:
-                name: prometheus
-                port:
-                  number: 9090
----
+data:
+  argocd.yml: |
+    http:
+      routers:
+        argocd:
+          rule: "PathPrefix(`/argocd`)"
+          service: argocd
+          entryPoints:
+            - web
+          middlewares:
+            - argocd-stripprefix
+        kiali:
+          rule: "PathPrefix(`/kiali`)"
+          service: kiali
+          entryPoints:
+            - web
+          middlewares:
+            - kiali-stripprefix
+        prometheus:
+          rule: "PathPrefix(`/prometheus`)"
+          service: prometheus
+          entryPoints:
+            - web
+          middlewares:
+            - prometheus-stripprefix
+
+      middlewares:
+        argocd-stripprefix:
+          stripPrefix:
+            prefixes:
+              - "/argocd"
+        kiali-stripprefix:
+          stripPrefix:
+            prefixes:
+              - "/kiali"
+        prometheus-stripprefix:
+          stripPrefix:
+            prefixes:
+              - "/prometheus"
+
+      services:
+        argocd:
+          loadBalancer:
+            servers:
+              - url: "http://argocd-server.argocd.svc.cluster.local:80"
+        kiali:
+          loadBalancer:
+            servers:
+              - url: "http://kiali.istio-system.svc.cluster.local:20001"
+        prometheus:
+          loadBalancer:
+            servers:
+              - url: "http://prometheus-server.monitor.svc.cluster.local:9090"
 
 ---
-# Service for ArgoCD
 apiVersion: v1
 kind: Service
 metadata:
@@ -211,30 +206,4 @@ spec:
   externalName: argocd-server.argocd.svc.cluster.local
   ports:
     - port: 80
-      targetPort: 80
----
-# Service for Kiali
-apiVersion: v1
-kind: Service
-metadata:
-  name: kiali
-  namespace: traefik
-spec:
-  type: ExternalName
-  externalName: kiali.istio-system.svc.cluster.local
-  ports:
-    - port: 20001
-      targetPort: 20001
----
-# Service for Prometheus
-apiVersion: v1
-kind: Service
-metadata:
-  name: prometheus
-  namespace: traefik
-spec:
-  type: ExternalName
-  externalName: prometheus-server.monitor.svc.cluster.local
-  ports:
-    - port: 9090
-      targetPort: 9090 
+      targetPort: 80 
