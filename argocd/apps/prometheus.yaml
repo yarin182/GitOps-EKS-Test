@@ -4,7 +4,7 @@ metadata:
   name: prometheus
   namespace: argocd
   finalizers:
-    - resources-finalizer.argocd.argocd.argoproj.io
+    - resources-finalizer.argocd.argocd.argocd.argoproj.io
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
@@ -15,7 +15,7 @@ spec:
     targetRevision: 25.8.0
     helm:
       values: |
-        # Prometheus configuration
+        # Prometheus configuration with Linkerd injection
         prometheus:
           retention: 7d
           resources:
@@ -30,12 +30,21 @@ spec:
           serviceAccount:
             create: false
             name: prometheus
+          # Enable Linkerd injection
+          podAnnotations:
+            linkerd.io/inject: enabled
         alertmanager:
           enabled: false
         kube-state-metrics:
           enabled: true
+          # Enable Linkerd injection for kube-state-metrics
+          podAnnotations:
+            linkerd.io/inject: enabled
         node-exporter:
           enabled: true
+          # Enable Linkerd injection for node-exporter
+          podAnnotations:
+            linkerd.io/inject: enabled
         # Disable PVC creation
         server:
           persistentVolume:

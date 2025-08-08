@@ -4,7 +4,7 @@ metadata:
   name: kiali
   namespace: argocd
   finalizers:
-    - resources-finalizer.argocd.argocd.argoproj.io
+    - resources-finalizer.argocd.argocd.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -13,12 +13,12 @@ spec:
     targetRevision: 1.76.0
     helm:
       values: |
-        # Kiali configuration
+        # Kiali configuration for Linkerd
         auth:
           strategy: anonymous
         external_services:
           istio:
-            root_namespace: istio-system
+            root_namespace: linkerd
           prometheus:
             url: "http://prometheus-server.monitor.svc.cluster.local:80"
             is_core: false
@@ -27,6 +27,10 @@ spec:
             query_timeout_seconds: 300
           tracing:
             enabled: false
+          # Linkerd configuration
+          linkerd:
+            enabled: true
+            url: "http://linkerd-destination.linkerd.svc.cluster.local:8086"
         server:
           port: 20001
         deployment:
@@ -39,13 +43,16 @@ spec:
             limits:
               cpu: 200m
               memory: 256Mi
+          # Enable Linkerd injection for Kiali itself
+          podAnnotations:
+            linkerd.io/inject: enabled
         # Disable problematic features
         features:
           disabled_features:
             - "registry"
   destination:
     server: https://kubernetes.default.svc
-    namespace: istio-system
+    namespace: kiali
   syncPolicy:
     automated:
       prune: true

@@ -1,0 +1,80 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: linkerd
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argocd.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://helm.linkerd.io/stable
+    chart: linkerd2
+    targetRevision: 1.13.0
+    helm:
+      values: |
+        # Linkerd configuration
+        global:
+          clusterDomain: cluster.local
+        identity:
+          issuer:
+            scheme: kubernetes.io/tls
+        proxy:
+          resources:
+            cpu:
+              request: 10m
+              limit: 100m
+            memory:
+              request: 20Mi
+              limit: 250Mi
+        destination:
+          resources:
+            cpu:
+              request: 10m
+              limit: 100m
+            memory:
+              request: 20Mi
+              limit: 250Mi
+        tap:
+          resources:
+            cpu:
+              request: 10m
+              limit: 100m
+            memory:
+              request: 20Mi
+              limit: 250Mi
+        policy:
+          resources:
+            cpu:
+              request: 10m
+              limit: 100m
+            memory:
+              request: 20Mi
+              limit: 250Mi
+        proxyInjector:
+          resources:
+            cpu:
+              request: 10m
+              limit: 100m
+            memory:
+              request: 20Mi
+              limit: 250Mi
+        spValidator:
+          resources:
+            cpu:
+              request: 10m
+              limit: 100m
+            memory:
+              request: 20Mi
+              limit: 250Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: linkerd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
