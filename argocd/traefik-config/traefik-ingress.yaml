@@ -162,8 +162,6 @@ data:
           service: prometheus
           entryPoints:
             - web
-          middlewares:
-            - prometheus-stripprefix
 
       middlewares:
         argocd-stripprefix:
@@ -171,10 +169,7 @@ data:
             prefixes:
               - "/argocd"
 
-        prometheus-stripprefix:
-          stripPrefix:
-            prefixes:
-              - "/prometheus"
+
 
       services:
         argocd:
