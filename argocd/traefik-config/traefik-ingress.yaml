@@ -157,8 +157,6 @@ data:
           service: kiali
           entryPoints:
             - web
-          middlewares:
-            - kiali-stripprefix
         prometheus:
           rule: "PathPrefix(`/prometheus`)"
           service: prometheus
@@ -172,10 +170,7 @@ data:
           stripPrefix:
             prefixes:
               - "/argocd"
-        kiali-stripprefix:
-          stripPrefix:
-            prefixes:
-              - "/kiali"
+
         prometheus-stripprefix:
           stripPrefix:
             prefixes:
