@@ -162,14 +162,18 @@ data:
           service: prometheus
           entryPoints:
             - web
+          middlewares:
+            - prometheus-stripprefix
 
       middlewares:
         argocd-stripprefix:
           stripPrefix:
             prefixes:
               - "/argocd"
-
-
+        prometheus-stripprefix:
+          stripPrefix:
+            prefixes:
+              - "/prometheus"
 
       services:
         argocd:
