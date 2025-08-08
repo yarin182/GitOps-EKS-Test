@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traffic-generator
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argocd.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/yarin182/GitOps-EKS-Test.git
+    targetRevision: HEAD
+    path: argocd/traffic-generator
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: traffic-generator
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
