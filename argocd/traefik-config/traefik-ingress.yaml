@@ -155,7 +155,7 @@ data:
           middlewares:
             - argocd-stripprefix
         jaeger:
-          rule: "PathPrefix(`/jaeger`)"
+          rule: "PathPrefix(`/jaeger`) || PathPrefix(`/`)"
           service: jaeger
           entryPoints:
             - web
