@@ -155,10 +155,12 @@ data:
           middlewares:
             - argocd-stripprefix
         jaeger:
-          rule: "PathPrefix(`/jaeger`) || PathPrefix(`/`)"
+          rule: "PathPrefix(`/jaeger`)"
           service: jaeger
           entryPoints:
             - web
+          middlewares:
+            - jaeger-stripprefix
         prometheus:
           rule: "PathPrefix(`/prometheus`)"
           service: prometheus
@@ -168,11 +170,14 @@ data:
             - prometheus-stripprefix
 
       middlewares:
-        argocd-stripprefix:
+                argocd-stripprefix:
           stripPrefix:
             prefixes:
               - "/argocd"
-
+        jaeger-stripprefix:
+          stripPrefix:
+            prefixes:
+              - "/jaeger"
         prometheus-stripprefix:
           stripPrefix:
             prefixes:

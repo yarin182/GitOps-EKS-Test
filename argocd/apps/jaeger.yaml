@@ -17,8 +17,6 @@ spec:
         query:
           # Enable Jaeger UI
           enabled: true
-          # Configure UI to work with subpath
-          basePath: /jaeger/
           resources:
             limits:
               cpu: 200m
