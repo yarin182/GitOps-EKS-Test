@@ -16,9 +16,8 @@ spec:
         # Linkerd configuration with auto-generated certificates
         global:
           clusterDomain: cluster.local
-        identity:
-          issuer:
-            scheme: kubernetes.io/tls
+        # Let Linkerd handle certificate generation automatically
+        # Remove all manual certificate configuration
         proxy:
           resources:
             cpu:
