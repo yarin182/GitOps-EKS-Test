@@ -40,6 +40,9 @@ spec:
           options:
             memory:
               max-traces: 50000
+        # Disable Cassandra to avoid storage issues
+        cassandra:
+          enabled: false
         agent:
           # Enable agent for collecting traces
           enabled: true
