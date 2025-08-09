@@ -159,8 +159,6 @@ data:
           service: jaeger
           entryPoints:
             - web
-          middlewares:
-            - jaeger-stripprefix
         prometheus:
           rule: "PathPrefix(`/prometheus`)"
           service: prometheus
@@ -174,10 +172,7 @@ data:
           stripPrefix:
             prefixes:
               - "/argocd"
-        jaeger-stripprefix:
-          stripPrefix:
-            prefixes:
-              - "/jaeger"
+
         prometheus-stripprefix:
           stripPrefix:
             prefixes:
