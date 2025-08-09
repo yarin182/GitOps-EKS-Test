@@ -19,10 +19,6 @@ spec:
         identity:
           issuer:
             scheme: kubernetes.io/tls
-            # This enables automatic certificate generation
-            tls:
-              crtPEM: ""
-              keyPEM: ""
         proxy:
           resources:
             cpu:
