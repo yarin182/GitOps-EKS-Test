@@ -47,3 +47,4 @@ spec:
     name: postgresql
   selector:
     app: database
+

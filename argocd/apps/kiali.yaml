@@ -1,41 +1,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kiali
+  name: linkerd-viz
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argocd.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://kiali.org/helm-charts
-    chart: kiali-server
-    targetRevision: 1.76.0
+    repoURL: https://helm.linkerd.io/stable
+    chart: linkerd-viz
+    targetRevision: 1.13.0
     helm:
       values: |
-        # Kiali configuration for Linkerd
-        auth:
-          strategy: anonymous
-        external_services:
-          istio:
-            root_namespace: linkerd
-          prometheus:
-            url: "http://prometheus-server.monitor.svc.cluster.local:80"
-            is_core: false
-            custom_metrics_url: "http://prometheus-server.monitor.svc.cluster.local:80"
-            health_check_url: "http://prometheus-server.monitor.svc.cluster.local:80/api/v1/query?query=up"
-            query_timeout_seconds: 300
-          tracing:
-            enabled: false
-          # Linkerd configuration
-          linkerd:
-            enabled: true
-            url: "http://linkerd-destination.linkerd.svc.cluster.local:8086"
-        server:
-          port: 20001
-        deployment:
-          accessible_namespaces:
-            - '**'
+        # Linkerd Viz configuration
+        grafana:
+          enabled: true
           resources:
             requests:
               cpu: 100m
@@ -43,16 +23,36 @@ spec:
             limits:
               cpu: 200m
               memory: 256Mi
-          # Enable Linkerd injection for Kiali itself
-          podAnnotations:
-            linkerd.io/inject: enabled
-        # Disable problematic features
-        features:
-          disabled_features:
-            - "registry"
+        prometheus:
+          enabled: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+        tap:
+          enabled: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+        web:
+          enabled: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
   destination:
     server: https://kubernetes.default.svc
-    namespace: kiali
+    namespace: linkerd-viz
   syncPolicy:
     automated:
       prune: true

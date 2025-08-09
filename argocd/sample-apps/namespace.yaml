@@ -4,3 +4,4 @@ metadata:
   name: sample-apps
   labels:
     linkerd.io/inject: enabled
+

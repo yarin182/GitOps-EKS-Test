@@ -154,9 +154,9 @@ data:
             - web
           middlewares:
             - argocd-stripprefix
-        kiali:
-          rule: "PathPrefix(`/kiali`)"
-          service: kiali
+        linkerd-viz:
+          rule: "PathPrefix(`/linkerd-viz`)"
+          service: linkerd-viz
           entryPoints:
             - web
         prometheus:
@@ -182,10 +182,10 @@ data:
           loadBalancer:
             servers:
               - url: "http://argocd-server.argocd.svc.cluster.local:80"
-        kiali:
+        linkerd-viz:
           loadBalancer:
             servers:
-              - url: "http://kiali.kiali.svc.cluster.local:20001"
+              - url: "http://web.linkerd-viz.svc.cluster.local:8084"
         prometheus:
           loadBalancer:
             servers:
