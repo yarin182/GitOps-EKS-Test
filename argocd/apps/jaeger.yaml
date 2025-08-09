@@ -1,60 +1,58 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: linkerd-viz
+  name: jaeger
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argocd.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://helm.linkerd.io/stable
-    chart: linkerd-viz
-    targetRevision: 30.12.11
+    repoURL: https://jaegertracing.github.io/helm-charts
+    chart: jaeger
+    targetRevision: 0.85.0
     helm:
       values: |
-        # Linkerd Viz configuration
-        # Linkerd control plane namespace
-        linkerdNamespace: linkerd
-        grafana:
+        # Jaeger configuration for distributed tracing
+        query:
+          # Enable Jaeger UI
           enabled: true
           resources:
-            requests:
-              cpu: 100m
-              memory: 128Mi
             limits:
               cpu: 200m
               memory: 256Mi
-        prometheus:
-          enabled: true
-          resources:
             requests:
               cpu: 100m
               memory: 128Mi
+        collector:
+          # Enable collector for receiving traces
+          enabled: true
+          resources:
             limits:
               cpu: 200m
               memory: 256Mi
-        tap:
-          enabled: true
-          resources:
             requests:
               cpu: 100m
               memory: 128Mi
-            limits:
-              cpu: 200m
-              memory: 256Mi
-        web:
+        storage:
+          # Use in-memory storage for simplicity
+          type: memory
+          options:
+            memory:
+              max-traces: 50000
+        agent:
+          # Enable agent for collecting traces
           enabled: true
           resources:
-            requests:
+            limits:
               cpu: 100m
               memory: 128Mi
-            limits:
-              cpu: 200m
-              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
   destination:
     server: https://kubernetes.default.svc
-    namespace: linkerd-viz
+    namespace: jaeger
   syncPolicy:
     automated:
       prune: true
@@ -62,4 +60,4 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
-      - PruneLast=true 
+      - PruneLast=true

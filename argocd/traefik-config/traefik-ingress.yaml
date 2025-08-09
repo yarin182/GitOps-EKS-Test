@@ -154,13 +154,13 @@ data:
             - web
           middlewares:
             - argocd-stripprefix
-        linkerd-viz:
-          rule: "PathPrefix(`/linkerd-viz`)"
-          service: linkerd-viz
+        jaeger:
+          rule: "PathPrefix(`/jaeger`)"
+          service: jaeger
           entryPoints:
             - web
           middlewares:
-            - linkerd-viz-stripprefix
+            - jaeger-stripprefix
         prometheus:
           rule: "PathPrefix(`/prometheus`)"
           service: prometheus
@@ -174,10 +174,10 @@ data:
           stripPrefix:
             prefixes:
               - "/argocd"
-        linkerd-viz-stripprefix:
+        jaeger-stripprefix:
           stripPrefix:
             prefixes:
-              - "/linkerd-viz"
+              - "/jaeger"
         prometheus-stripprefix:
           stripPrefix:
             prefixes:
@@ -188,10 +188,10 @@ data:
           loadBalancer:
             servers:
               - url: "http://argocd-server.argocd.svc.cluster.local:80"
-        linkerd-viz:
+        jaeger:
           loadBalancer:
             servers:
-              - url: "http://web.linkerd-viz.svc.cluster.local:8084"
+              - url: "http://jaeger-query.jaeger.svc.cluster.local:16686"
         prometheus:
           loadBalancer:
             servers:
