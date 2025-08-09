@@ -9,63 +9,12 @@ spec:
   project: default
   source:
     repoURL: https://helm.linkerd.io/stable
-    chart: linkerd-control-plane
-    targetRevision: 1.16.11
+    chart: linkerd2
+    targetRevision: 1.13.0
     helm:
       values: |
-        # Linkerd configuration with auto-generated certificates
-        global:
-          clusterDomain: cluster.local
-        # Let Linkerd handle certificate generation automatically
-        # Remove all manual certificate configuration
-        proxy:
-          resources:
-            cpu:
-              request: 10m
-              limit: 100m
-            memory:
-              request: 20Mi
-              limit: 250Mi
-        destination:
-          resources:
-            cpu:
-              request: 10m
-              limit: 100m
-            memory:
-              request: 20Mi
-              limit: 250Mi
-        tap:
-          resources:
-            cpu:
-              request: 10m
-              limit: 100m
-            memory:
-              request: 20Mi
-              limit: 250Mi
-        policy:
-          resources:
-            cpu:
-              request: 10m
-              limit: 100m
-            memory:
-              request: 20Mi
-              limit: 250Mi
-        proxyInjector:
-          resources:
-            cpu:
-              request: 10m
-              limit: 100m
-            memory:
-              request: 20Mi
-              limit: 250Mi
-        spValidator:
-          resources:
-            cpu:
-              request: 10m
-              limit: 100m
-            memory:
-              request: 20Mi
-              limit: 250Mi
+        # Use default Linkerd configuration
+        # Linkerd will generate certificates automatically
   destination:
     server: https://kubernetes.default.svc
     namespace: linkerd
