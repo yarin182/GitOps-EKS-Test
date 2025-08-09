@@ -154,28 +154,48 @@ data:
             - web
           middlewares:
             - argocd-stripprefix
-        kiali:
-          rule: "PathPrefix(`/kiali`)"
-          service: kiali
+        jaeger:
+          rule: "PathPrefix(`/jaeger`)"
+          service: jaeger
           entryPoints:
             - web
+          middlewares:
+            - jaeger-stripprefix
+        prometheus:
+          rule: "PathPrefix(`/prometheus`)"
+          service: prometheus
+          entryPoints:
+            - web
+          middlewares:
+            - prometheus-stripprefix
 
       middlewares:
         argocd-stripprefix:
           stripPrefix:
             prefixes:
               - "/argocd"
-
+        jaeger-stripprefix:
+          stripPrefix:
+            prefixes:
+              - "/jaeger"
+        prometheus-stripprefix:
+          stripPrefix:
+            prefixes:
+              - "/prometheus"
 
       services:
         argocd:
           loadBalancer:
             servers:
               - url: "http://argocd-server.argocd.svc.cluster.local:80"
-        kiali:
+        jaeger:
           loadBalancer:
             servers:
-              - url: "http://kiali.istio-system.svc.cluster.local:20001"
+              - url: "http://jaeger-query.jaeger.svc.cluster.local:80"
+        prometheus:
+          loadBalancer:
+            servers:
+              - url: "http://prometheus-server.monitor.svc.cluster.local:80"
 
 ---
 apiVersion: v1
