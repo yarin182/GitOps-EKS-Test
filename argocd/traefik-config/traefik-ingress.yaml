@@ -191,7 +191,7 @@ data:
         jaeger:
           loadBalancer:
             servers:
-              - url: "http://jaeger-query.jaeger.svc.cluster.local:16686"
+              - url: "http://jaeger-query.jaeger.svc.cluster.local:80"
         prometheus:
           loadBalancer:
             servers:
