@@ -13,12 +13,16 @@ spec:
     targetRevision: 1.16.11
     helm:
       values: |
-        # Linkerd configuration
+        # Linkerd configuration with auto-generated certificates
         global:
           clusterDomain: cluster.local
         identity:
           issuer:
             scheme: kubernetes.io/tls
+            # This enables automatic certificate generation
+            tls:
+              crtPEM: ""
+              keyPEM: ""
         proxy:
           resources:
             cpu:
