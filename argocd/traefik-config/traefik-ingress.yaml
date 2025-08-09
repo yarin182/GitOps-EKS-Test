@@ -11,8 +11,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: traefik
-  labels:
-    linkerd.io/inject: enabled
+  labels: {}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -82,8 +81,7 @@ spec:
     metadata:
       labels:
         app: traefik
-      annotations:
-        linkerd.io/inject: enabled
+      annotations: {}
     spec:
       serviceAccountName: traefik-ingress-controller
       containers:
@@ -99,6 +97,8 @@ spec:
             - --entrypoints.websecure.address=:443
             - --providers.file.directory=/etc/traefik/dynamic
             - --providers.file.watch=true
+            - --tracing.jaeger=true
+            - --tracing.jaeger.localAgentHostPort=jaeger-agent.jaeger:6831
           ports:
             - name: web
               containerPort: 80
@@ -154,48 +154,28 @@ data:
             - web
           middlewares:
             - argocd-stripprefix
-        jaeger:
-          rule: "PathPrefix(`/jaeger`)"
-          service: jaeger
+        kiali:
+          rule: "PathPrefix(`/kiali`)"
+          service: kiali
           entryPoints:
             - web
-          middlewares:
-            - jaeger-stripprefix
-        prometheus:
-          rule: "PathPrefix(`/prometheus`)"
-          service: prometheus
-          entryPoints:
-            - web
-          middlewares:
-            - prometheus-stripprefix
 
       middlewares:
-                argocd-stripprefix:
+        argocd-stripprefix:
           stripPrefix:
             prefixes:
               - "/argocd"
-        jaeger-stripprefix:
-          stripPrefix:
-            prefixes:
-              - "/jaeger"
-        prometheus-stripprefix:
-          stripPrefix:
-            prefixes:
-              - "/prometheus"
+
 
       services:
         argocd:
           loadBalancer:
             servers:
               - url: "http://argocd-server.argocd.svc.cluster.local:80"
-        jaeger:
+        kiali:
           loadBalancer:
             servers:
-              - url: "http://jaeger-query.jaeger.svc.cluster.local:80"
-        prometheus:
-          loadBalancer:
-            servers:
-              - url: "http://prometheus-server.monitor.svc.cluster.local:80"
+              - url: "http://kiali.istio-system.svc.cluster.local:20001"
 
 ---
 apiVersion: v1
