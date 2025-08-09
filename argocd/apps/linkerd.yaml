@@ -9,15 +9,18 @@ spec:
   project: default
   source:
     repoURL: https://helm.linkerd.io/stable
-    chart: linkerd-control-plane
-    targetRevision: 1.16.11
+    chart: linkerd2
+    targetRevision: 1.13.0
     helm:
       values: |
-        # Linkerd configuration with automatic certificate generation
+        # Linkerd2 chart configuration
+        # This chart has better auto-certificate generation
         global:
           clusterDomain: cluster.local
-        # Let Linkerd generate certificates automatically
-        # Remove all manual certificate configuration to use defaults
+        # Enable automatic certificate generation
+        identity:
+          issuer:
+            scheme: kubernetes.io/tls
         # Resource limits for components
         proxy:
           resources:
