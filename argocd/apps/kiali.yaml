@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kiali
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  project: default
+  source:
+    repoURL: https://kiali.org/helm-charts
+    chart: kiali-server
+    targetRevision: 1.73.0
+    helm:
+      values: |
+        # Kiali configuration for Istio
+        auth:
+          strategy: anonymous
+        deployment:
+          accessible_namespaces:
+            - '**'
+          view_only_mode: false
+          custom_dashboards:
+            enabled: true
+        external_services:
+          istio:
+            root_namespace: istio-system
+          prometheus:
+            url: http://prometheus-server.monitor.svc.cluster.local:80
+          grafana:
+            enabled: false
+          tracing:
+            enabled: true
+            url: http://jaeger-query.jaeger.svc.cluster.local:80
+        server:
+          web_root: /kiali
+          port: 20001
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true

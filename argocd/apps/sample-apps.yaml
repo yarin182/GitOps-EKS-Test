@@ -1,19 +1,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: traefik
+  name: sample-apps
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"
 spec:
   project: default
   source:
     repoURL: https://github.com/yarin182/GitOps-EKS-Test.git
     targetRevision: HEAD
-    path: argocd/traefik-config
+    path: argocd/sample-apps
   destination:
     server: https://kubernetes.default.svc
-    namespace: traefik
+    namespace: sample-apps
   syncPolicy:
     automated:
       prune: true
@@ -21,4 +23,4 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
-      - PruneLast=true 
+      - PruneLast=true

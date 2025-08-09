@@ -15,7 +15,7 @@ spec:
     targetRevision: 25.8.0
     helm:
       values: |
-        # Prometheus configuration
+        # Prometheus configuration for Istio
         prometheus:
           retention: 7d
           resources:
@@ -30,6 +30,21 @@ spec:
           serviceAccount:
             create: false
             name: prometheus
+          # Istio integration
+          additionalScrapeConfigs:
+            - job_name: 'istio-mesh'
+              kubernetes_sd_configs:
+                - role: endpoints
+                  namespaces:
+                    names:
+                      - istio-system
+              relabel_configs:
+                - source_labels: [__meta_kubernetes_service_name]
+                  action: keep
+                  regex: istio-telemetry
+                - source_labels: [__meta_kubernetes_pod_container_name]
+                  action: keep
+                  regex: mixer
         alertmanager:
           enabled: false
         kube-state-metrics:
