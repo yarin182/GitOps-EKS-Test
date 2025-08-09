@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://helm.traefik.io/mesh
     chart: traefik-mesh
-    targetRevision: 9.0.0
+    targetRevision: 4.1.1
     helm:
       values: |
         # Traefik Mesh configuration
