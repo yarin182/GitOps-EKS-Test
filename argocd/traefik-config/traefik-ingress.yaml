@@ -159,6 +159,8 @@ data:
           service: linkerd-viz
           entryPoints:
             - web
+          middlewares:
+            - linkerd-viz-stripprefix
         prometheus:
           rule: "PathPrefix(`/prometheus`)"
           service: prometheus
@@ -172,6 +174,10 @@ data:
           stripPrefix:
             prefixes:
               - "/argocd"
+        linkerd-viz-stripprefix:
+          stripPrefix:
+            prefixes:
+              - "/linkerd-viz"
         prometheus-stripprefix:
           stripPrefix:
             prefixes:

@@ -14,6 +14,8 @@ spec:
     helm:
       values: |
         # Linkerd Viz configuration
+        # Linkerd control plane namespace
+        linkerdNamespace: linkerd
         grafana:
           enabled: true
           resources:
