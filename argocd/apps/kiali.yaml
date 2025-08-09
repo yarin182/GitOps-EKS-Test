@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://helm.linkerd.io/stable
     chart: linkerd-viz
-    targetRevision: 1.13.0
+    targetRevision: 1.16.11
     helm:
       values: |
         # Linkerd Viz configuration
