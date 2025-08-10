@@ -24,9 +24,16 @@ spec:
             - name: https
               port: 443
               targetPort: 8443
-        # Disable problematic sidecar injection
+        # Critical: Disable sidecar injection completely
         podAnnotations:
           sidecar.istio.io/inject: "false"
+        # Override the default template to not inject sidecars
+        injectTemplate: ""
+        # Ensure no sidecar injection
+        global:
+          sidecarInjectorWebhook:
+            enabled: false
+        # Use minimal resources
         resources:
           requests:
             cpu: 100m
