@@ -11,7 +11,7 @@ spec:
   project: default
   source:
     repoURL: https://istio-release.storage.googleapis.com/charts
-    chart: istio/gateway
+    chart: gateway
     targetRevision: 1.26.3
     helm:
       values: |
