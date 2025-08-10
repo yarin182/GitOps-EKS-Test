@@ -4,7 +4,7 @@ metadata:
   name: istio-discovery
   namespace: argocd
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argocd.argoproj.io
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
@@ -41,6 +41,13 @@ spec:
             limits:
               cpu: 1000m
               memory: 4096Mi
+          # Explicitly control sidecar injection
+          enableNamespacesByDefault: false
+          # Exclude istio-system namespace from injection
+          excludeNamespaces:
+            - istio-system
+            - kube-system
+            - argocd
         telemetry:
           # Enable telemetry collection
           enabled: true
@@ -48,6 +55,17 @@ spec:
           # Enable Jaeger integration
           enabled: true
           provider: jaeger
+        # Additional injection control
+        sidecarInjectorWebhook:
+          # Disable injection for istio-system namespace
+          namespaceSelector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: NotIn
+                values:
+                  - istio-system
+                  - kube-system
+                  - argocd
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system

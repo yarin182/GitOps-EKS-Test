@@ -4,7 +4,7 @@ metadata:
   name: istio-base
   namespace: argocd
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argocd.argoproj.io
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
@@ -13,6 +13,30 @@ spec:
     repoURL: https://istio-release.storage.googleapis.com/charts
     chart: base
     targetRevision: 1.20.0
+    helm:
+      values: |
+        # Global Istio configuration
+        global:
+          # Disable sidecar injection by default
+          sidecarInjectorWebhook:
+            enableNamespacesByDefault: false
+            # Exclude system namespaces
+            namespaceSelector:
+              matchExpressions:
+                - key: kubernetes.io/metadata.name
+                  operator: NotIn
+                  values:
+                    - istio-system
+                    - kube-system
+                    - argocd
+                    - default
+        # Webhook configuration
+        webhook:
+          # Ensure webhook is properly configured
+          enabled: true
+          # Add validation for webhook
+          validation:
+            enabled: true
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system
