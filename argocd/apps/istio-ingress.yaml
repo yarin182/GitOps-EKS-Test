@@ -32,7 +32,10 @@ spec:
           limits:
             cpu: 200m
             memory: 256Mi
-        # Disable sidecar injection to avoid webhook issues
+        # Override the hardcoded sidecar injection label from the chart
+        podLabels:
+          sidecar.istio.io/inject: "false"
+        # Also set the annotation for extra safety
         podAnnotations:
           sidecar.istio.io/inject: "false"
   destination:
