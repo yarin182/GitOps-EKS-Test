@@ -23,7 +23,7 @@ spec:
       serviceAccountName: istio-ingress
       containers:
       - name: istio-proxy
-        image: auto
+        image: istio/proxyv2:1.20.0
         ports:
         - containerPort: 8080
           name: http
