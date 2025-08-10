@@ -28,7 +28,8 @@ spec:
         
         # Pod configuration
         podAnnotations:
-          inject.istio.io/templates: kube-gateway  # Use the correct template for gateway deployment
+          inject.istio.io/templates: sidecar  # Use the standard sidecar template
+          sidecar.istio.io/inject: "true"    # Enable sidecar injection
         
         # Resources
         resources:
