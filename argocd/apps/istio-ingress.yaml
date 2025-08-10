@@ -16,7 +16,7 @@ spec:
     helm:
       values: |
         service:
-          type: LoadBalancer
+          type: ClusterIP
           ports:
             - name: http2
               port: 80
