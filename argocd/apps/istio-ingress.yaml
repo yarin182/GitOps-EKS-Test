@@ -32,6 +32,9 @@ spec:
           limits:
             cpu: 200m
             memory: 256Mi
+        # Disable sidecar injection to avoid webhook issues
+        podAnnotations:
+          sidecar.istio.io/inject: "false"
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system
