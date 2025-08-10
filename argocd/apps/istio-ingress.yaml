@@ -33,14 +33,6 @@ spec:
           limits:
             cpu: 200m
             memory: 256Mi
-        
-        # Disable sidecar injection completely
-        podAnnotations:
-          sidecar.istio.io/inject: "false"
-        
-        # Override any hardcoded labels
-        labels:
-          sidecar.istio.io/inject: "false"
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system
