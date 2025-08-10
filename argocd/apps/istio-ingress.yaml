@@ -11,16 +11,10 @@ spec:
   project: default
   source:
     repoURL: https://istio-release.storage.googleapis.com/charts
-    chart: gateway
+    chart: ingressgateway
     targetRevision: 1.20.0
     helm:
       values: |
-        # Main container image configuration
-        image:
-          repository: auto
-          tag: 1.20.0
-          pullPolicy: IfNotPresent
-        
         service:
           type: ClusterIP  # Only ClusterIP - ALB will handle external access
           ports:
