@@ -49,6 +49,10 @@ spec:
         serviceAccount:
           create: true
           name: istio-ingressgateway
+        
+        # Labels to match our gateway selector
+        labels:
+          istio: ingressgateway
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system
