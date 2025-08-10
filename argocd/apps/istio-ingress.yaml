@@ -16,7 +16,7 @@ spec:
     helm:
       values: |
         service:
-          type: ClusterIP  # Use ClusterIP instead of LoadBalancer
+          type: ClusterIP  # Only ClusterIP - ALB will handle external access
           ports:
             - name: http2
               port: 80
@@ -24,7 +24,7 @@ spec:
             - name: https
               port: 443
               targetPort: 8443
-        # Minimal configuration to avoid sidecar issues
+        # Minimal resources
         resources:
           requests:
             cpu: 100m
@@ -32,10 +32,10 @@ spec:
           limits:
             cpu: 200m
             memory: 256Mi
-        # Disable sidecar injection using the correct Istio gateway approach
+        # Disable sidecar injection completely
         podAnnotations:
           sidecar.istio.io/inject: "false"
-        # Use Istio gateway specific configuration
+        # Override any hardcoded labels
         labels:
           sidecar.istio.io/inject: "false"
   destination:
