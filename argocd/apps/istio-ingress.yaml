@@ -15,6 +15,12 @@ spec:
     targetRevision: 1.20.0
     helm:
       values: |
+        # Main container image configuration
+        image:
+          repository: auto
+          tag: 1.20.0
+          pullPolicy: IfNotPresent
+        
         service:
           type: ClusterIP  # Only ClusterIP - ALB will handle external access
           ports:
@@ -24,6 +30,7 @@ spec:
             - name: https
               port: 443
               targetPort: 8443
+        
         # Minimal resources
         resources:
           requests:
@@ -32,9 +39,11 @@ spec:
           limits:
             cpu: 200m
             memory: 256Mi
+        
         # Disable sidecar injection completely
         podAnnotations:
           sidecar.istio.io/inject: "false"
+        
         # Override any hardcoded labels
         labels:
           sidecar.istio.io/inject: "false"
