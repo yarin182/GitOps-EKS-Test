@@ -16,7 +16,7 @@ spec:
     helm:
       values: |
         service:
-          type: ClusterIP
+          type: ClusterIP  # Use ClusterIP instead of LoadBalancer
           ports:
             - name: http2
               port: 80
@@ -32,11 +32,11 @@ spec:
           limits:
             cpu: 200m
             memory: 256Mi
-        # Override the hardcoded sidecar injection label from the chart
-        podLabels:
-          sidecar.istio.io/inject: "false"
-        # Also set the annotation for extra safety
+        # Disable sidecar injection using the correct Istio gateway approach
         podAnnotations:
+          sidecar.istio.io/inject: "false"
+        # Use Istio gateway specific configuration
+        labels:
           sidecar.istio.io/inject: "false"
   destination:
     server: https://kubernetes.default.svc
