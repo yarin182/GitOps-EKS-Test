@@ -5,7 +5,7 @@ metadata:
   namespace: istio-system
 spec:
   selector:
-    istio: ingress  # This will match the istio-ingress pods
+    istio: ingressgateway  # This will match the istio-ingressgateway pods
   servers:
     - port:
         number: 80

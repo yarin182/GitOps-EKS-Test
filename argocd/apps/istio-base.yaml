@@ -20,16 +20,6 @@ spec:
           # Disable sidecar injection by default
           sidecarInjectorWebhook:
             enableNamespacesByDefault: false
-            # Exclude system namespaces
-            namespaceSelector:
-              matchExpressions:
-                - key: kubernetes.io/metadata.name
-                  operator: NotIn
-                  values:
-                    - istio-system
-                    - kube-system
-                    - argocd
-                    - default
         # Webhook configuration
         webhook:
           # Ensure webhook is properly configured

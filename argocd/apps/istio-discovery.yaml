@@ -55,17 +55,6 @@ spec:
           # Enable Jaeger integration
           enabled: true
           provider: jaeger
-        # Additional injection control
-        sidecarInjectorWebhook:
-          # Disable injection for istio-system namespace
-          namespaceSelector:
-            matchExpressions:
-              - key: kubernetes.io/metadata.name
-                operator: NotIn
-                values:
-                  - istio-system
-                  - kube-system
-                  - argocd
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system

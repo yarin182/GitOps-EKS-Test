@@ -11,10 +11,11 @@ spec:
   project: default
   source:
     repoURL: https://istio-release.storage.googleapis.com/charts
-    chart: gateway
+    chart: istio-ingressgateway
     targetRevision: 1.20.0
     helm:
       values: |
+        # Gateway configuration
         service:
           type: ClusterIP  # Only ClusterIP - ALB will handle external access
           ports:
@@ -25,7 +26,11 @@ spec:
               port: 443
               targetPort: 8443
         
-        # Minimal resources
+        # Pod configuration
+        podAnnotations:
+          sidecar.istio.io/inject: "false"  # Disable sidecar injection for the gateway itself
+        
+        # Resources
         resources:
           requests:
             cpu: 100m
@@ -33,6 +38,17 @@ spec:
           limits:
             cpu: 200m
             memory: 256Mi
+        
+        # Security context
+        securityContext:
+          sysctls:
+            - name: net.ipv4.ip_unprivileged_port_start
+              value: "0"
+        
+        # Service account
+        serviceAccount:
+          create: true
+          name: istio-ingressgateway
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system
